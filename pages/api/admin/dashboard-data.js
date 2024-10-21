@@ -67,6 +67,33 @@ export default async function handler(req, res) {
     console.error('Error fetching dashboard data:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+}
+
+app.post('/api/admin/add-customer', async (req, res) => {
+  const session = await getSession({ req });
+  if (!session || session.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Not authorized' });
+  }
+
+  const { name, contactEmail, contactPhone } = req.body;
+  if (!name || !contactEmail || !contactPhone) {
+    return res.status(400).json({ error: 'Missing required fields' });
+  }
+
+  try {
+    const client = await clientPromise;
+    const db = client.db('adinput');
+    const result = await db.collection('customers').insertOne({
+      name,
+      contactEmail,
+      contactPhone
+    });
+    res.status(201).json({ message: 'Customer added successfully', customerId: result.insertedId });
+  } catch (error) {
+    console.error('Error adding customer:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 }import { ObjectId } from 'mongodb';
 
 app.post('/api/admin/add-customer', async (req, res) => {
