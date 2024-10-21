@@ -34,26 +34,7 @@ export default function AdminDashboard() {
   };
 
   const generateToken = async (campaignId) => {
-    try {
-      const response = await fetch('/api/admin/generate-token', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ campaignId }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        const accessUrl = `${window.location.origin}/input/${data.token}`;
-        await navigator.clipboard.writeText(accessUrl);
-        alert(`Token copied to clipboard!\n\nAccess URL: ${accessUrl}`);
-      } else {
-        alert('Failed to generate token');
-      }
-    } catch (error) {
-      console.error('Error generating token:', error);
-      alert('An error occurred while generating the token');
-    }
+    // ... (keep the existing generateToken function)
   };
 
   if (status === 'loading' || isLoading) {
@@ -69,7 +50,20 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
         
-        {/* ... (stats display remains the same) ... */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Total Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.totalCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Active Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.activeCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Completed Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.completedCampaigns}</div>
+          </div>
+        </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
@@ -92,7 +86,7 @@ export default function AdminDashboard() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
                       onClick={() => generateToken(campaign._id)}
-                      className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md text-sm"
+                      className="text-indigo-600 hover:text-indigo-900"
                     >
                       Generate Token
                     </button>

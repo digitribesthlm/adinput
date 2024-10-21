@@ -44,9 +44,7 @@ export default function AdminDashboard() {
       });
       const data = await response.json();
       if (response.ok) {
-        const accessUrl = `${window.location.origin}/input/${data.token}`;
-        await navigator.clipboard.writeText(accessUrl);
-        alert(`Token copied to clipboard!\n\nAccess URL: ${accessUrl}`);
+        alert(`Token generated: ${data.token}\nAccess URL: ${window.location.origin}/input/${data.token}`);
       } else {
         alert('Failed to generate token');
       }
@@ -69,7 +67,20 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
         
-        {/* ... (stats display remains the same) ... */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Total Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.totalCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Active Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.activeCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Completed Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.completedCampaigns}</div>
+          </div>
+        </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
