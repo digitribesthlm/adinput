@@ -102,6 +102,7 @@ export default function AdminDashboard() {
   );
 }
  const generateTokenForCampaign = async (campaignId) => {
+const generateTokenForCampaign = async (campaignId) => {
    try {
      const response = await fetch(`/api/generate-token?campaignId=${campaignId}`, {
        method: 'POST',
@@ -109,11 +110,17 @@ export default function AdminDashboard() {
          'Content-Type': 'application/json',
        },
      });
-     const data = await response.json();
-     if (data.token) {
+     if (response.ok) {
+       const data = await response.json();
+       if (data.token) {
+         alert(`Token URL: ${window.location.origin}/input/${data.token}`);
+       } else {
+         alert('Token was not generated. Please try again.');
+       }
        alert(`Token URL: ${window.location.origin}/input/${data.token}`);
      } else {
-       alert('Failed to generate token');
+       const errorData = await response.json();
+       alert(`Failed to generate token: ${errorData.message}`);
      }
    } catch (error) {
      console.error('Error generating token:', error);
