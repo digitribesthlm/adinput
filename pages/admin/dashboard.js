@@ -135,10 +135,10 @@ const generateTokenForCampaign = async (campaignId) => {
       }
     } else {
       const errorData = await response.json();
-      alert(`Failed to generate token: ${errorData.message}`);
+      alert(`Failed to generate token: ${errorData.error || 'Unknown error'}`);
     }
   } catch (error) {
     console.error('Error generating token:', error);
-    alert('Error generating token');
+    alert(`Error generating token: ${error.message}`);
   }
 };
