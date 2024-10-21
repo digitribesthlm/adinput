@@ -1,5 +1,6 @@
 // pages/api/admin/dashboard-data.js
 
+import { ObjectId } from 'mongodb';
 import { getSession } from 'next-auth/react';
 import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
@@ -94,7 +95,7 @@ app.post('/api/admin/add-customer', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-}import { ObjectId } from 'mongodb';
+}
 
 app.post('/api/admin/add-customer', async (req, res) => {
   const session = await getSession({ req });
