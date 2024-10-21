@@ -95,7 +95,6 @@ app.post('/api/admin/add-customer', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-}
 
 app.post('/api/admin/add-customer', async (req, res) => {
   const session = await getSession({ req });
