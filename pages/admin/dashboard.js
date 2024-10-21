@@ -126,4 +126,4 @@ const generateTokenForCampaign = async (campaignId) => {
      console.error('Error generating token:', error);
      alert('Error generating token');
    }
- };
+ }};
