@@ -24,7 +24,7 @@ export default function AdminDashboard() {
       const response = await fetch('/api/admin/dashboard-data');
       const data = await response.json();
       setCampaigns(data.campaigns);
-      setStats(data.stats);
+      setStats(data.stats || {});
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
     }
@@ -42,14 +42,14 @@ export default function AdminDashboard() {
     <Layout>
       <div className="space-y-6 p-4">
         <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-        
+
         <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4" role="alert">
           <p className="font-bold">Welcome, {session.user.name}!</p>
           <p>You are logged in as an admin.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {Object.entries(stats).map(([key, value]) => (
+          {stats && Object.entries(stats).map(([key, value]) => (
             <div key={key} className="bg-white shadow rounded-lg p-6">
               <div className="text-sm font-medium text-gray-500 truncate">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
               <div className="mt-1 text-3xl font-semibold text-gray-900">{value}</div>
