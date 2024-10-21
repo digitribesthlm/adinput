@@ -44,11 +44,6 @@ export default function TokenBasedAdInput() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Ad Input for {campaign.companyName}</h1>
-      <AdCopyForm 
-        initialPlatform={campaign.platform}
-        initialAdType={campaign.adType}
-        campaignId={campaign._id}
       <h1 className="text-2xl font-bold mb-4">Ad Input for {campaign?.companyName}</h1>
       <AdCopyForm 
         initialPlatform={campaign?.platform}
