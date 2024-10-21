@@ -16,15 +16,24 @@ export default async function handler(req, res) {
   const db = client.db('adinput');
 
   try {
-    // Log input data for debugging purposes
-    console.log('Saving Ad with data:', { campaignId, platform, adType, adCopy, createdAt });
+    // Normalize adCopy data
+    const normalizedAdCopy = {
+      headline: adCopy.headline,
+      description: adCopy.description,
+      finalUrl: adCopy.finalUrl[0] || '',
+      callToAction: adCopy.callToAction[0] || '',
+      businessName: adCopy.businessName[0] || '',
+      imageUrl: adCopy.imageUrl[0] || '',
+      logoUrl: adCopy.logoUrl[0] || '',
+      videoUrl: adCopy.videoUrl || []
+    };
 
     const result = await db.collection('ads').insertOne({
       campaignId: new ObjectId(campaignId),
       platform,
       adType,
-      adCopy,
-      createdAt: createdAt || new Date()
+      adCopy: normalizedAdCopy,
+      createdAt: createdAt ? new Date(createdAt) : new Date()
     });
 
     if (!result.acknowledged) {
@@ -35,7 +44,7 @@ export default async function handler(req, res) {
     res.status(200).json({ message: 'Ad saved successfully' });
   } catch (error) {
     console.error('An error occurred while saving the ad:', error);
-    res.status(500).json({ message: 'An error occurred while saving the ad' });
+    res.status(500).json({ message: 'An error occurred while saving the ad', error: error.message });
   } finally {
     await client.close();
   }
