@@ -71,7 +71,36 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns && campaigns.map((campaign) => (
+                {campaigns?.length > 0 ? (
+                  campaigns.map((campaign) => (
+                    <tr key={campaign._id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.adType}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.status}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button 
+                          onClick={() => alert(`View details for campaign ${campaign._id}`)}
+                          className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md text-sm"
+                        >
+                          View Details
+                        </button>
+                       <button 
+                         onClick={() => generateTokenForCampaign(campaign._id)}
+                         className="ml-2 text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-sm"
+                       >
+                         Generate Token
+                       </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">
+                      No campaigns available.
+                    </td>
+                  </tr>
+                )}
                   <tr key={campaign._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
