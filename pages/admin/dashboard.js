@@ -73,7 +73,13 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns?.length > 0 ? (
+                {campaigns === null ? (
+                 <tr>
+                   <td colSpan="5" className="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">
+                     Loading campaigns...
+                   </td>
+                 </tr>
+               ) : campaigns.length > 0 ? (
                   campaigns.map((campaign) => (
                     <tr key={campaign._id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
