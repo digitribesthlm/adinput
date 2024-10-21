@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'eact'; // Corrected 'eact' to 'eact'
+import { useEffect, useState } from 'react'; // Corrected 'eact' to 'react'
 
 const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = false }) => {
   const [adPlatforms, setAdPlatforms] = useState({});
