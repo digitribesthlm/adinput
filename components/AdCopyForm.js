@@ -1,3 +1,4 @@
+// /compontents/AdCopyForm.js
 import { useEffect, useState } from 'react'; // Corrected 'eact' to 'react'
 
 const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = false }) => {
