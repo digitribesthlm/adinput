@@ -8,12 +8,14 @@ export default function TokenBasedAdInput() {
   const [campaign, setCampaign] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [hasValidated, setHasValidated] = useState(false);
 
   useEffect(() => {
-    if (token) {
+    if (token && !hasValidated) {
       validateToken();
+      setHasValidated(true);
     }
-  }, [token]);
+  }, [token, hasValidated]);
 
   const validateToken = async () => {
     try {
