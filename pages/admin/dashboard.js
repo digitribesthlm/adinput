@@ -1,5 +1,3 @@
-// pages/admin/dashboard.js
-
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -11,6 +9,7 @@ export default function AdminDashboard() {
   const [campaigns, setCampaigns] = useState(null);
   const [stats, setStats] = useState({ totalCampaigns: 0, activeCampaigns: 0, completedCampaigns: 0 });
 
+  // Fetch the dashboard data when the user is authenticated
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
@@ -22,7 +21,8 @@ export default function AdminDashboard() {
   const fetchDashboardData = async () => {
     try {
       const response = await fetch('/api/admin/dashboard-data');
-      const data = await response.json();
+      const data = await response.json(); // Ensure that the API returns valid JSON
+      console.log('Dashboard data:', data); // Log the fetched data to inspect it
       setCampaigns(data.campaigns);
       setStats(data.stats || {});
     } catch (error) {
@@ -30,10 +30,12 @@ export default function AdminDashboard() {
     }
   };
 
+  // Loading screen while session data is being fetched
   if (status === 'loading') {
     return <div>Loading...</div>;
   }
 
+  // If the user is not authenticated, do not render the dashboard
   if (!session) {
     return null;
   }
@@ -85,12 +87,12 @@ export default function AdminDashboard() {
                         >
                           View Details
                         </button>
-                       <button 
-                         onClick={() => generateTokenForCampaign(campaign._id)}
-                         className="ml-2 text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-sm"
-                       >
-                         Generate Token
-                       </button>
+                        <button 
+                          onClick={() => generateTokenForCampaign(campaign._id)}
+                          className="ml-2 text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-sm"
+                        >
+                          Generate Token
+                        </button>
                       </td>
                     </tr>
                   ))
@@ -101,27 +103,6 @@ export default function AdminDashboard() {
                     </td>
                   </tr>
                 )}
-                  <tr key={campaign._id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.adType}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.status}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button 
-                        onClick={() => alert(`View details for campaign ${campaign._id}`)}
-                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md text-sm"
-                      >
-                        View Details
-                      </button>
-                     <button 
-                       onClick={() => generateTokenForCampaign(campaign._id)}
-                       className="ml-2 text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-sm"
-                     >
-                       Generate Token
-                     </button>
-                    </td>
-                  </tr>
-                ))}
               </tbody>
             </table>
           </div>
@@ -130,29 +111,28 @@ export default function AdminDashboard() {
     </Layout>
   );
 }
- const generateTokenForCampaign = async (campaignId) => {
+
 const generateTokenForCampaign = async (campaignId) => {
-   try {
-     const response = await fetch(`/api/generate-token?campaignId=${campaignId}`, {
-       method: 'POST',
-       headers: {
-         'Content-Type': 'application/json',
-       },
-     });
-     if (response.ok) {
-       const data = await response.json();
-       if (data.token) {
-         alert(`Token URL: ${window.location.origin}/input/${data.token}`);
-       } else {
-         alert('Token was not generated. Please try again.');
-       }
-       alert(`Token URL: ${window.location.origin}/input/${data.token}`);
-     } else {
-       const errorData = await response.json();
-       alert(`Failed to generate token: ${errorData.message}`);
-     }
-   } catch (error) {
-     console.error('Error generating token:', error);
-     alert('Error generating token');
-   }
- }};
+  try {
+    const response = await fetch(`/api/generate-token?campaignId=${campaignId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.token) {
+        alert(`Token URL: ${window.location.origin}/input/${data.token}`);
+      } else {
+        alert('Token was not generated. Please try again.');
+      }
+    } else {
+      const errorData = await response.json();
+      alert(`Failed to generate token: ${errorData.message}`);
+    }
+  } catch (error) {
+    console.error('Error generating token:', error);
+    alert('Error generating token');
+  }
+};
