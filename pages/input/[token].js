@@ -22,7 +22,11 @@ export default function TokenBasedAdInput() {
       const response = await fetch(`/api/validate-token?token=${token}`);
       if (response.ok) {
         const data = await response.json();
-        setCampaign(data.campaign);
+        if (data.campaign) {
+          setCampaign(data.campaign);
+        } else {
+          setError('Campaign data is not available');
+        }
       } else {
         setError('Invalid or expired token');
       }
@@ -35,7 +39,8 @@ export default function TokenBasedAdInput() {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
-  if (!campaign) return null;
+  // Removed the check that returns null if there is no campaign
+  // to ensure that the form is rendered even if the campaign is not set
 
   return (
     <div className="container mx-auto p-4">
@@ -44,6 +49,11 @@ export default function TokenBasedAdInput() {
         initialPlatform={campaign.platform}
         initialAdType={campaign.adType}
         campaignId={campaign._id}
+      <h1 className="text-2xl font-bold mb-4">Ad Input for {campaign?.companyName}</h1>
+      <AdCopyForm 
+        initialPlatform={campaign?.platform}
+        initialAdType={campaign?.adType}
+        campaignId={campaign?._id}
         tokenBased={true}
       />
     </div>
