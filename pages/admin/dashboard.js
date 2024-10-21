@@ -1,0 +1,97 @@
+// pages/admin/dashboard.js
+
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import Layout from '../../components/Layout';
+
+export default function AdminDashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [campaigns, setCampaigns] = useState([]);
+  const [stats, setStats] = useState({ totalCampaigns: 0, activeCampaigns: 0, completedCampaigns: 0 });
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    } else if (status === 'authenticated') {
+      fetchDashboardData();
+    }
+  }, [status, router]);
+
+  const fetchDashboardData = async () => {
+    try {
+      const response = await fetch('/api/admin/dashboard-data');
+      const data = await response.json();
+      setCampaigns(data.campaigns);
+      setStats(data.stats);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+    }
+  };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
+
+  if (!session) {
+    return null;
+  }
+
+  return (
+    <Layout>
+      <div className="space-y-6 p-4">
+        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        
+        <div className="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4" role="alert">
+          <p className="font-bold">Welcome, {session.user.name}!</p>
+          <p>You are logged in as an admin.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {Object.entries(stats).map(([key, value]) => (
+            <div key={key} className="bg-white shadow rounded-lg p-6">
+              <div className="text-sm font-medium text-gray-500 truncate">{key.replace(/([A-Z])/g, ' $1').trim()}</div>
+              <div className="mt-1 text-3xl font-semibold text-gray-900">{value}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white shadow rounded-lg p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Recent Campaigns</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  {['Company', 'Platform', 'Ad Type', 'Status', 'Action'].map((header) => (
+                    <th key={header} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {campaigns.map((campaign) => (
+                  <tr key={campaign._id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.adType}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                      <button 
+                        onClick={() => alert(`View details for campaign ${campaign._id}`)}
+                        className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md text-sm"
+                      >
+                        View Details
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </Layout>
+  );
+}
