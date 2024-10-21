@@ -224,7 +224,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
         </>
       )}
 
-      {adPlatform && adType && Object.keys(adTypeFields[adPlatform][adType]).map(renderInputs)}
+      {adPlatform && adType && adTypeFields[adPlatform] && adTypeFields[adPlatform][adType] && Object.keys(adTypeFields[adPlatform][adType]).map(renderInputs)}
 
       <button
         onClick={handleSave}
