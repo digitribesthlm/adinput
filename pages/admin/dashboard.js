@@ -8,7 +8,7 @@ import Layout from '../../components/Layout';
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [campaigns, setCampaigns] = useState([]);
+  const [campaigns, setCampaigns] = useState(null);
   const [stats, setStats] = useState({ totalCampaigns: 0, activeCampaigns: 0, completedCampaigns: 0 });
 
   useEffect(() => {
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {campaigns.map((campaign) => (
+                {campaigns && campaigns.map((campaign) => (
                   <tr key={campaign._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
