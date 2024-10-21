@@ -15,6 +15,15 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
     fetchAdData();
   }, []);
 
+  // Ensure that the adTypeFields data structure is correctly initialized
+  useEffect(() => {
+    if (Object.keys(adTypeFields).length > 0 && initialPlatform && initialAdType) {
+      setAdPlatform(initialPlatform);
+      setAdType(initialAdType);
+      initializeAdCopy(initialPlatform, initialAdType);
+    }
+  }, [adTypeFields, initialPlatform, initialAdType]);
+
   useEffect(() => {
     if (adPlatform && adType && adTypeFields[adPlatform] && adTypeFields[adPlatform][adType]) {
       initializeAdCopy(adPlatform, adType);
@@ -225,6 +234,11 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
       )}
 
       {adPlatform && adType && adTypeFields[adPlatform] && adTypeFields[adPlatform][adType] && Object.keys(adTypeFields[adPlatform][adType]).map(renderInputs)}
+      {adPlatform && adType && adTypeFields[adPlatform] && adTypeFields[adPlatform][adType] ? (
+        Object.keys(adTypeFields[adPlatform][adType]).map(renderInputs)
+      ) : (
+        <div>No ad fields available for the selected platform and ad type.</div>
+      )}
 
       <button
         onClick={handleSave}
