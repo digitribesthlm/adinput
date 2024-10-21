@@ -1,5 +1,4 @@
-// pages/api/ad-data.js
-
+// /pages/api/ad-data.js
 import { MongoClient } from 'mongodb';
 
 export default async function handler(req, res) {
@@ -33,12 +32,14 @@ export default async function handler(req, res) {
       if (!formattedFields[field.platform][field.adType]) {
         formattedFields[field.platform][field.adType] = {};
       }
-      formattedFields[field.platform][field.adType][field.name] = {
-        charLimit: field.charLimit,
-        min: field.min,
-        max: field.max,
-        optional: field.optional
-      };
+      field.fields.forEach(subField => {
+        formattedFields[field.platform][field.adType][subField.name] = {
+          charLimit: subField.charLimit,
+          min: subField.min,
+          max: subField.max,
+          optional: subField.optional || false
+        };
+      });
     });
 
     res.status(200).json({
