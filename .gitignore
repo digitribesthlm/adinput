@@ -34,3 +34,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore aider chat logs
+*aider_chat.*
+.aider.chat.history.md
+
+
+# Ignore database files
+*.db

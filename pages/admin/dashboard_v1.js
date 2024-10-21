@@ -34,7 +34,25 @@ export default function AdminDashboard() {
   };
 
   const generateToken = async (campaignId) => {
-    // ... (keep the existing generateToken function)
+    try {
+      const response = await fetch('/api/admin/generate-token', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ campaignId }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        alert(`Token generated: ${data.token}\nURL: ${window.location.origin}/input/${data.token}`);
+        fetchDashboardData(); // Refresh the campaign list
+      } else {
+        alert('Failed to generate token');
+      }
+    } catch (error) {
+      console.error('Error generating token:', error);
+      alert('An error occurred while generating the token');
+    }
   };
 
   if (status === 'loading' || isLoading) {
