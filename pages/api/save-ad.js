@@ -1,5 +1,4 @@
-// pages/api/save-ad.js
-
+// /pages/api/save-ad.js
 import { MongoClient, ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
@@ -7,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { campaignId, platform, adType, adCopy } = req.body;
+  const { campaignId, platform, adType, adCopy, createdAt } = req.body;
 
   if (!campaignId || !platform || !adType || !adCopy) {
     return res.status(400).json({ message: 'Missing required fields' });
@@ -17,25 +16,25 @@ export default async function handler(req, res) {
   const db = client.db('adinput');
 
   try {
-    const result = await db.collection('adCampaigns').updateOne(
-      { _id: new ObjectId(campaignId) },
-      { 
-        $set: { 
-          platform,
-          adType,
-          adCopy,
-          status: 'completed',
-          updatedAt: new Date()
-        }
-      }
-    );
+    // Log input data for debugging purposes
+    console.log('Saving Ad with data:', { campaignId, platform, adType, adCopy, createdAt });
 
-    if (result.modifiedCount === 0) {
-      return res.status(404).json({ message: 'Campaign not found or not updated' });
+    const result = await db.collection('ads').insertOne({
+      campaignId: new ObjectId(campaignId),
+      platform,
+      adType,
+      adCopy,
+      createdAt: createdAt || new Date()
+    });
+
+    if (!result.acknowledged) {
+      console.error('Insert failed:', result);
+      return res.status(500).json({ message: 'Failed to save ad' });
     }
 
     res.status(200).json({ message: 'Ad saved successfully' });
   } catch (error) {
+    console.error('An error occurred while saving the ad:', error);
     res.status(500).json({ message: 'An error occurred while saving the ad' });
   } finally {
     await client.close();
