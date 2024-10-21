@@ -20,11 +20,17 @@ export default async function handler(req, res) {
           as: 'company'
         }
       },
-      { $unwind: '$company' },
+      {
+        $unwind: {
+          path: '$company',
+          preserveNullAndEmptyArrays: true
+        }
+      },
       {
         $project: {
           _id: 1,
-          companyName: '$company.name',
+          companyId: '$companyId',
+          companyName: { $ifNull: ['$company.name', 'Unknown Company'] },
           platform: 1,
           adType: 1,
           status: 1

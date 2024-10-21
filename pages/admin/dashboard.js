@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Layout from '../../components/Layout';
 
 export default function AdminDashboard() {
@@ -69,7 +70,20 @@ export default function AdminDashboard() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
         
-        {/* ... (stats display remains the same) ... */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Total Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.totalCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Active Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.activeCampaigns}</div>
+          </div>
+          <div className="bg-white shadow rounded-lg p-6">
+            <div className="text-sm font-medium text-gray-500">Completed Campaigns</div>
+            <div className="mt-2 text-3xl font-semibold text-gray-900">{stats.completedCampaigns}</div>
+          </div>
+        </div>
 
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
@@ -85,16 +99,24 @@ export default function AdminDashboard() {
             <tbody className="bg-white divide-y divide-gray-200">
               {campaigns.map((campaign) => (
                 <tr key={campaign._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.companyName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {campaign.companyId ? (
+                      <Link href={`/admin/company/${campaign.companyId}`} className="text-blue-600 hover:text-blue-900">
+                        {campaign.companyName || 'Unknown Company'}
+                      </Link>
+                    ) : (
+                      'Unknown Company'
+                    )}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.platform}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.adType}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.status}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
                       onClick={() => generateToken(campaign._id)}
-                      className="text-indigo-600 hover:text-indigo-900 bg-indigo-100 hover:bg-indigo-200 px-3 py-1 rounded-md text-sm"
+                      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
-                      Generate Token
+                      Copy Link
                     </button>
                   </td>
                 </tr>
