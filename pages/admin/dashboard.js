@@ -84,6 +84,12 @@ export default function AdminDashboard() {
                       >
                         View Details
                       </button>
+                     <button 
+                       onClick={() => generateTokenForCampaign(campaign._id)}
+                       className="ml-2 text-green-600 hover:text-green-900 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-sm"
+                     >
+                       Generate Token
+                     </button>
                     </td>
                   </tr>
                 ))}
@@ -95,3 +101,22 @@ export default function AdminDashboard() {
     </Layout>
   );
 }
+ const generateTokenForCampaign = async (campaignId) => {
+   try {
+     const response = await fetch(`/api/generate-token?campaignId=${campaignId}`, {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+       },
+     });
+     const data = await response.json();
+     if (data.token) {
+       alert(`Token URL: ${window.location.origin}/input/${data.token}`);
+     } else {
+       alert('Failed to generate token');
+     }
+   } catch (error) {
+     console.error('Error generating token:', error);
+     alert('Error generating token');
+   }
+ };
