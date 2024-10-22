@@ -24,29 +24,17 @@ export default async function handler(req, res) {
 async function getAdCounts(db, tokens) {
   const adCounts = {};
 
-  // Hardcode a test token for debugging
-  const testToken = '595d5b68-7314-4ce5-830f-ab6a2fecac84';
-
   for (const token of tokens) {
     console.log('Token ID:', token._id);
     console.log('Token:', token.token);
 
-    let count;
-    if (token.token === testToken) {
-      // Use the hardcoded test token for testing
-      count = await db.collection('ads').countDocuments({ token: testToken });
-      console.log('Test Token Ad Count:', count);
-    } else {
-      count = await db.collection('ads').countDocuments({ token: token.token });
-      console.log('Ad Count:', count);
-    }
+    const count = await db.collection('ads').countDocuments({ token: token.token });
+    console.log('Ad Count:', count);
 
     adCounts[token.token] = count;
   }
 
   console.log('Ad Counts:', adCounts);
-  console.log('Test Token:', testToken);
-  console.log('Test Token Ad Count:', adCounts[testToken]);
 
   return adCounts;
 }
