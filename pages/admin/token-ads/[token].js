@@ -56,9 +56,18 @@ export default function TokenAds() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.platform}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.adType}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {ad.adType === 'Performance Max' && <PerformanceMaxAd ad={ad} />}
-                    {ad.adType === 'Search' && <SearchAd ad={ad} />}
-                    {ad.adType === 'Carousel' && <CarouselAd ad={ad} />}
+                    {ad.adType === 'Performance Max' && ad.adCopy.headline && (Array.isArray(ad.adCopy.headline) ? ad.adCopy.headline.join(', ') : ad.adCopy.headline)}
+                    {ad.adType === 'Search' && ad.adCopy.headline}
+                    {ad.adType === 'Carousel' && ad.adCopy.headline}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {ad.adType === 'Performance Max' && ad.adCopy.description && (Array.isArray(ad.adCopy.description) ? ad.adCopy.description.join(', ') : ad.adCopy.description)}
+                    {ad.adType === 'Search' && ad.adCopy.description}
+                    {ad.adType === 'Carousel' && ad.adCopy.description}  
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {ad.adType === 'Performance Max' && ad.adCopy.callToAction}
+                    {ad.adType === 'Carousel' && ad.adCopy.callToAction}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(ad.createdAt).toLocaleString()}
