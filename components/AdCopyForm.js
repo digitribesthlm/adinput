@@ -17,7 +17,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
   }, []);
 
   useEffect(() => {
-    if (Object.keys(adTypeFields).length > 0 && adPlatform && adType) {
+    if (adPlatforms[adPlatform] && adTypes[adPlatform]?.[adType]) {
       initializeAdCopy(adPlatform, adType);
       setIsLoading(false);
     }
@@ -112,7 +112,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
 
   return (
     <div className="max-w-xl mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-5">{adPlatforms[adPlatform]} - {adTypes[adPlatform][adType]}</h1>
+      <h1 className="text-2xl font-bold mb-5">{adPlatforms[adPlatform] && adTypes[adPlatform] ? `${adPlatforms[adPlatform]} - ${adTypes[adPlatform][adType]}` : 'Loading platform and campaign type...'}</h1>
       {adPlatform && adType ? (
         Object.keys(adTypeFields[adPlatform]?.[adType] || {}).map((field) => (
           <div key={field} className="mb-4">
