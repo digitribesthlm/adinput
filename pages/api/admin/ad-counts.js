@@ -1,58 +1,52 @@
-// /pages/api/save-ad.js
-import { MongoClient, ObjectId } from 'mongodb';
+import { MongoClient } from 'mongodb';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
+  if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
-  }
-
-  const { campaignId, platform, adType, adCopy, createdAt, token } = req.body;
-  console.log('Token received:', token);
-  if (!token || typeof token !== 'string' || token.trim() === '') {
-    return res.status(400).json({ message: 'Invalid or missing token' });
-  }
-  
-
-  if (!campaignId || !platform || !adType || !adCopy) {
-    return res.status(400).json({ message: 'Missing required fields' });
   }
 
   const client = await MongoClient.connect(process.env.MONGODB_URI);
   const db = client.db('adinput');
 
   try {
-    // Normalize adCopy data
-    const normalizedAdCopy = {
-      headline: adCopy.headline,
-      description: adCopy.description,
-      finalUrl: adCopy.finalUrl[0] || '',
-      callToAction: adCopy.callToAction[0] || '',
-      businessName: adCopy.businessName[0] || '',
-      imageUrl: adCopy.imageUrl[0] || '',
-      logoUrl: adCopy.logoUrl[0] || '',
-      videoUrl: adCopy.videoUrl || []
-    };
+    const tokens = await db.collection('tokens').find().toArray();
+    const adCounts = await getAdCounts(db, tokens);
 
-    console.log('Preparing to save ad with token:', token);
-    const result = await db.collection('ads').insertOne({
-      campaignId: new ObjectId(campaignId),
-      platform,
-      adType,
-      adCopy: normalizedAdCopy,
-      createdAt: createdAt ? new Date(createdAt) : new Date(),
-      token: token.trim() // Include the token used for producing the ad
-    });
-
-    if (!result.acknowledged) {
-      console.error('Insert failed:', result);
-      return res.status(500).json({ message: 'Failed to save ad' });
-    }
-
-    res.status(200).json({ message: 'Ad saved successfully' });
+    res.status(200).json({ adCounts });
   } catch (error) {
-    console.error('An error occurred while saving the ad:', error);
-    res.status(500).json({ message: 'An error occurred while saving the ad', error: error.message });
+    console.error('An error occurred while fetching ad counts:', error);
+    res.status(500).json({ message: 'An error occurred while fetching ad counts', error: error.message });
   } finally {
     await client.close();
   }
+}
+
+async function getAdCounts(db, tokens) {
+  const adCounts = {};
+
+  // Hardcode a test token for debugging
+  const testToken = 'your_test_token_here';
+
+  for (const token of tokens) {
+    console.log('Token ID:', token._id);
+    console.log('Token:', token.token);
+
+    let count;
+    if (token.token === testToken) {
+      // Use the hardcoded test token for testing
+      count = await db.collection('ads').countDocuments({ token: testToken });
+      console.log('Test Token Ad Count:', count);
+    } else {
+      count = await db.collection('ads').countDocuments({ token: token.token });
+      console.log('Ad Count:', count);
+    }
+
+    adCounts[token.token] = count;
+  }
+
+  console.log('Ad Counts:', adCounts);
+  console.log('Test Token:', testToken);
+  console.log('Test Token Ad Count:', adCounts[testToken]);
+
+  return adCounts;
 }
