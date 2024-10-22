@@ -10,6 +10,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
   const [adType, setAdType] = useState(initialAdType);
   const [adCopy, setAdCopy] = useState({});
   const [errors, setErrors] = useState({});
+  const [warnings, setWarnings] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [platformName, setPlatformName] = useState('');
@@ -67,40 +68,69 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
     }
     setAdCopy(updatedAdCopy);
     validateForm();
+    checkWarnings(field, value);
   };
 
   const validateForm = () => {
     const formErrors = {};
     let isValid = true;
     Object.entries(adTypeFields[adPlatform]?.[adType] || {}).forEach(([field, requirements]) => {
-      if (!requirements.optional && (!adCopy[field] || (Array.isArray(adCopy[field]) && adCopy[field].length < requirements.min))) {
+      if (!requirements.optional && (!adCopy[field] || (Array.isArray(adCopy[field]) && adCopy[field].filter(v => v !== '').length < requirements.min))) {
         formErrors[field] = 'This field is required';
         isValid = false;
+      }
+      if (Array.isArray(adCopy[field])) {
+        adCopy[field].forEach((value, index) => {
+          if (value.length > requirements.charLimit) {
+            formErrors[`${field}-${index}`] = `Character limit of ${requirements.charLimit} exceeded!`;
+            isValid = false;
+          }
+        });
+      } else {
+        if (adCopy[field]?.length > requirements.charLimit) {
+          formErrors[field] = `Character limit of ${requirements.charLimit} exceeded!`;
+          isValid = false;
+        }
       }
     });
     setErrors(formErrors);
     setIsFormValid(isValid);
   };
 
+  const checkWarnings = (field, value) => {
+    const fieldRequirements = adTypeFields[adPlatform]?.[adType]?.[field];
+    const newWarnings = { ...warnings };
+
+    if (fieldRequirements && value.length > fieldRequirements.charLimit) {
+      newWarnings[field] = `Character limit of ${fieldRequirements.charLimit} exceeded!`;
+    } else {
+      delete newWarnings[field];
+    }
+
+    setWarnings(newWarnings);
+  };
+
   const handleSave = async () => {
-    if (isFormValid) {
-      try {
-        const response = await fetch('/api/save-ad', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date() }),
-        });
-        if (response.ok) {
-          alert('Ad saved successfully!');
-        } else {
-          alert('Failed to save ad');
-        }
-      } catch (error) {
-        console.error('Error saving ad:', error);
-        alert('An error occurred while saving the ad');
+    if (!isFormValid) {
+      alert('Please fix the errors before saving the form.');
+      return;
+    }
+    try {
+      const response = await fetch('/api/save-ad', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date() }),
+      });
+      if (response.ok) {
+        alert('Ad saved successfully!');
+      } else {
+        alert('Failed to save ad');
       }
+    } catch (error) {
+      console.error('Error saving ad:', error);
+      alert('An error occurred while saving the ad');
     }
   };
 
@@ -152,33 +182,31 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
               
               {Array.isArray(adCopy[field]) ? (
                 adCopy[field].map((value, index) => (
-                  <div key={index} className="mb-2">
+                  <div key={index} className="mb-2 flex items-center">
                     <input
                       type="text"
                       value={value}
                       onChange={(e) => handleInputChange(field, index, e.target.value)}
-                      className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                      maxLength={fieldRequirements.charLimit}
+                      className={`shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors[`${field}-${index}`] ? 'border-red-500' : ''}`}
                       placeholder={`${field} ${index + 1}`}
                     />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Characters: {countCharacters(value)} / {fieldRequirements.charLimit}
-                    </p>
+                    <span className="ml-2 text-xs text-gray-500">
+                      {countCharacters(value)} / {fieldRequirements.charLimit}
+                    </span>
                   </div>
                 ))
               ) : (
-                <div>
+                <div className="flex items-center">
                   <input
                     type="text"
                     value={adCopy[field] || ''}
                     onChange={(e) => handleInputChange(field, 0, e.target.value)}
-                    className="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    maxLength={fieldRequirements.charLimit}
+                    className={`shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${errors[field] ? 'border-red-500' : ''}`}
                     placeholder={field}
                   />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Characters: {countCharacters(adCopy[field])} / {fieldRequirements.charLimit}
-                  </p>
+                  <span className="ml-2 text-xs text-gray-500">
+                    {countCharacters(adCopy[field])} / {fieldRequirements.charLimit}
+                  </span>
                 </div>
               )}
               
@@ -202,8 +230,8 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
       )}
       <button
         onClick={handleSave}
+        className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full ${!isFormValid ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={!isFormValid}
-        className={`${isFormValid ? 'bg-blue-500 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'} text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full`}
       >
         Save Ad
       </button>
