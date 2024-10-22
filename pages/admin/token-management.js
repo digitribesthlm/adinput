@@ -34,8 +34,7 @@ export default function TokenManagement() {
   };
 
   const filteredTokens = tokens.filter(token => 
-    (token.token.toLowerCase().includes(searchTerm.toLowerCase()) ||
-     token.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (token.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
      token.campaignType.toLowerCase().includes(searchTerm.toLowerCase())) &&
     (statusFilter === 'all' || token.status === statusFilter)
   );
@@ -44,6 +43,15 @@ export default function TokenManagement() {
     const accessUrl = `${window.location.origin}/input/${token}`;
     await navigator.clipboard.writeText(accessUrl);
     alert(`Token copied to clipboard!\n\nAccess URL: ${accessUrl}`);
+  };
+
+  const calculateTimeLeft = (expiresAt) => {
+    const expiresAtDate = new Date(expiresAt);
+    const now = new Date();
+    const timeDifference = expiresAtDate - now;
+    if (timeDifference <= 0) return 'Expired';
+    const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    return `${daysLeft} day(s) left`;
   };
 
   if (status === 'loading' || isLoading) {
@@ -62,7 +70,7 @@ export default function TokenManagement() {
         <div className="mb-4 flex flex-wrap items-center">
           <input
             type="text"
-            placeholder="Search by token, company, or campaign type..."
+            placeholder="Search by company or campaign type..."
             className="p-2 border rounded mr-4 mb-2 sm:mb-0"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -83,26 +91,25 @@ export default function TokenManagement() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Token</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Campaign Type</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expires At</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Left</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredTokens.map((token) => (
                 <tr key={token._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{token.token}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{token.companyName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{token.campaignType}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                       ${token.status === 'active' ? 'bg-green-100 text-green-800' : 
                         token.status === 'used' ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-red-100 text-red-800'}`}>
+                        'bg-red-100 text-red-800'}`}> 
                       {token.status}
                     </span>
                   </td>
@@ -111,6 +118,9 @@ export default function TokenManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(token.expiresAt).toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {calculateTimeLeft(token.expiresAt)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
