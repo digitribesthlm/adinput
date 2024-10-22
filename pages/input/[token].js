@@ -1,4 +1,5 @@
 // /pages/input/[token].js
+
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import AdCopyForm from '../../components/AdCopyForm';
@@ -37,12 +38,12 @@ export default function TokenBasedAdInput() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Ad Input Form</h1>
       {campaign ? (
         <AdCopyForm 
           initialPlatform={campaign.platform}
           initialAdType={campaign.adType}
           campaignId={campaign._id}
+          companyName={campaign.companyName}
           tokenBased={true}
         />
       ) : (
