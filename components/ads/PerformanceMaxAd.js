@@ -9,7 +9,7 @@ const PerformanceMaxAd = ({ ad }) => {
       <p>Business Name: {ad.adCopy.businessName}</p>
       <p>Image URL: {ad.adCopy.imageUrl}</p>
       <p>Logo URL: {ad.adCopy.logoUrl}</p>
-      <p>Video URL: {ad.adCopy.videoUrl}</p>
+      <p>Video URL(s): {Array.isArray(ad.adCopy.videoUrl) ? ad.adCopy.videoUrl.join(', ') : ad.adCopy.videoUrl}</p>
     </div>
   );
 };
