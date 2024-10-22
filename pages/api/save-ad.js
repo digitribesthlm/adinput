@@ -17,16 +17,14 @@ export default async function handler(req, res) {
 
   try {
     // Normalize adCopy data
-    const normalizedAdCopy = {
-      headline: adCopy.headline,
-      description: adCopy.description,
-      finalUrl: adCopy.finalUrl[0] || '',
-      callToAction: adCopy.callToAction[0] || '',
-      businessName: adCopy.businessName[0] || '',
-      imageUrl: adCopy.imageUrl[0] || '',
-      logoUrl: adCopy.logoUrl[0] || '',
-      videoUrl: adCopy.videoUrl || []
-    };
+    const normalizedAdCopy = {};
+    for (const field in adCopy) {
+      if (Array.isArray(adCopy[field])) {
+        normalizedAdCopy[field] = adCopy[field][0] || '';
+      } else {
+        normalizedAdCopy[field] = adCopy[field];
+      }
+    }
 
     const result = await db.collection('ads').insertOne({
       campaignId: new ObjectId(campaignId),

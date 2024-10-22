@@ -12,7 +12,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
   const [errors, setErrors] = useState({});
   const [warnings, setWarnings] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [platformName, setPlatformName] = useState('');
   const [adTypeName, setAdTypeName] = useState('');
 
@@ -147,9 +147,6 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
 
   const countCharacters = (text) => text?.length || 0;
 
-  if (isLoading) {
-    return <div>Loading ad data...</div>;
-  }
 
   return (
     <div className="max-w-xl mx-auto mt-10">
