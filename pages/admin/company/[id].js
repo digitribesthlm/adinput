@@ -1,4 +1,4 @@
-// pages/admin/company/[id].js
+// pages/admin/company/[id].js -
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';

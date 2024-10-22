@@ -1,4 +1,4 @@
-// components/LoginForm.js
+// components/LoginForm.js -
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';

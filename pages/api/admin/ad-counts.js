@@ -1,4 +1,4 @@
-// pages/api/admin/ad-counts.js
+// pages/api/admin/ad-counts.js -
 
 import { MongoClient } from 'mongodb';
 

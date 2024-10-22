@@ -1,4 +1,4 @@
-// components/AdInputForm.js
+// components/AdInputForm.js -
 
 import { useState } from 'react';
 

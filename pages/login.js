@@ -1,4 +1,4 @@
-// pages/login.js
+// pages/login.js - 
 
 import { useState } from 'react';
 import { signIn } from 'next-auth/react';

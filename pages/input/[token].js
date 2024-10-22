@@ -1,4 +1,4 @@
-// /pages/input/[token].js
+// /pages/input/[token].js - 
 
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';

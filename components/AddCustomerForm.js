@@ -1,4 +1,4 @@
-// components/AddCustomerForm.js
+// components/AddCustomerForm.js -
 
 import React, { useState } from 'react';
 

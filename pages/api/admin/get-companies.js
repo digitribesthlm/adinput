@@ -1,4 +1,4 @@
-// pages/api/admin/get-companies.js
+// pages/api/admin/get-companies.js - 
 
 import { MongoClient } from 'mongodb';
 

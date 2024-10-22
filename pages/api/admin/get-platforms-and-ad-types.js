@@ -1,4 +1,4 @@
-// pages/api/admin/get-platforms-and-ad-types.js
+// pages/api/admin/get-platforms-and-ad-types.js - 
 
 import { MongoClient } from 'mongodb';
 

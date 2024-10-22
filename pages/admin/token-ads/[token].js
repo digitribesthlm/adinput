@@ -1,3 +1,4 @@
+// pages/admin/token-ads/[token].js
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Layout from '../../../components/Layout';

@@ -1,4 +1,4 @@
-// pages/api/admin/generate-token.js
+// pages/api/admin/generate-token.js - 
 
 import { MongoClient, ObjectId } from 'mongodb';
 import { v4 as uuidv4 } from 'uuid';

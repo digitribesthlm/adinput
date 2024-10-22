@@ -1,4 +1,4 @@
-// pages/admin/dashboard.js
+// pages/admin/dashboard.js -
 
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';

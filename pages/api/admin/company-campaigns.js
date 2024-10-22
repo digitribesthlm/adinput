@@ -1,4 +1,4 @@
-// pages/api/admin/company-campaigns.js
+// pages/api/admin/company-campaigns.js -
 
 import { MongoClient, ObjectId } from 'mongodb';
 

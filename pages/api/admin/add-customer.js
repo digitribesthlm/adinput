@@ -1,4 +1,4 @@
-// pages/api/admin/add-customer.js
+// pages/api/admin/add-customer.js -
 
 import { MongoClient } from 'mongodb';
 

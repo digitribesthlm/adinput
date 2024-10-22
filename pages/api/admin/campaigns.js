@@ -1,4 +1,4 @@
-// pages/api/admin/campaigns.js
+// pages/api/admin/campaigns.js -
 
 import { getSession } from 'next-auth/react';
 import clientPromise from '../../../lib/mongodb';
