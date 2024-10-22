@@ -5,7 +5,7 @@ import clientPromise from '../../lib/mongodb';
 export default async function handler(req, res) {
   try {
     const client = await clientPromise;
-    const db = client.db('adinput');
+    const db = client.db(process.env.MONGODB_DB);
 
     const platforms = await db.collection('adPlatforms').find().toArray();
     const types = await db.collection('adTypes').find().toArray();

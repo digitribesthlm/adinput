@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   const client = await MongoClient.connect(process.env.MONGODB_URI);
   console.log('Connected to MongoDB'); // Step 3: Log successful connection
 
-  const db = client.db('adinput');
+  const db = client.db(process.env.MONGODB_DB);
 
   try {
     console.log('Finding token in database...'); // Step 4: Log before finding the token

@@ -14,7 +14,7 @@ export default NextAuth({
       },
       async authorize(credentials) {
         const client = await MongoClient.connect(process.env.MONGODB_URI);
-        const db = client.db('adinput');
+        const db = client.db(process.env.MONGODB_DB);
         const user = await db.collection('users').findOne({ email: credentials.email });
         
         if (user && credentials.password === user.password) { // In production, use proper password hashing

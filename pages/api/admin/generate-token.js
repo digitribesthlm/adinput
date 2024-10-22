@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   const client = await MongoClient.connect(process.env.MONGODB_URI);
-  const db = client.db('adinput');
+  const db = client.db(process.env.MONGODB_DB);
 
   try {
     const campaign = await db.collection('adCampaigns').findOne({ _id: new ObjectId(campaignId) });
