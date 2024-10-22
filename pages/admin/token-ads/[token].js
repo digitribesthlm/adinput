@@ -41,6 +41,9 @@ export default function TokenAds() {
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Platform</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ad Type</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Headline</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTA</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
               </tr>
             </thead>
@@ -49,6 +52,9 @@ export default function TokenAds() {
                 <tr key={ad._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.platform}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.adType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.headline}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.description}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.cta}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(ad.createdAt).toLocaleString()}
                   </td>
