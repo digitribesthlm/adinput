@@ -121,7 +121,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date(), token }),
+        body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date(), token: token }),
       });
       if (response.ok) {
         alert('Ad saved successfully!');
