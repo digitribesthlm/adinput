@@ -24,7 +24,7 @@ async function getAdCounts(db, tokens) {
     console.log('Token:', token.token);
     const count = await db.collection('ads').countDocuments({ token: token._id });
     console.log('Ad Count:', count);
-    adCounts[token.token] = count;
+    adCounts[token._id] = count;
   }
   console.log('Ad Counts:', adCounts);
   return adCounts;
