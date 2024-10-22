@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Layout from '../../../components/Layout';
+import PerformanceMaxAd from '../../../components/ads/PerformanceMaxAd';
+import SearchAd from '../../../components/ads/SearchAd';
+import CarouselAd from '../../../components/ads/CarouselAd';
 
 export default function TokenAds() {
   const router = useRouter();
@@ -52,9 +55,11 @@ export default function TokenAds() {
                 <tr key={ad._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.platform}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.adType}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.headline}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.description}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{ad.cta}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {ad.adType === 'Performance Max' && <PerformanceMaxAd ad={ad} />}
+                    {ad.adType === 'Search' && <SearchAd ad={ad} />}
+                    {ad.adType === 'Carousel' && <CarouselAd ad={ad} />}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {new Date(ad.createdAt).toLocaleString()}
                   </td>
