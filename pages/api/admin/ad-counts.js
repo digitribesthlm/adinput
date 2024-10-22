@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 async function getAdCounts(db, tokens) {
   const adCounts = {};
   for (const token of tokens) {
-    const count = await db.collection('ads').countDocuments({ token: token.token });
+    const count = await db.collection('ads').countDocuments({ token: token._id });
     adCounts[token.token] = count;
   }
   return adCounts;
