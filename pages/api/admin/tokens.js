@@ -61,7 +61,7 @@ export default async function handler(req, res) {
     ]).toArray();
 
     const adCounts = await getAdCounts(db, tokens);
-    res.status(200).json({ tokens, adCounts });
+    res.status(200).json({ tokens: tokens, adCounts: adCounts });
   } catch (error) {
     console.error('Error fetching tokens:', error);
     res.status(500).json({ message: 'An error occurred while fetching tokens' });
