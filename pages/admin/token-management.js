@@ -135,7 +135,7 @@ export default function TokenManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     <Link href={`/admin/token-ads/${token.token}`} className="text-blue-500 hover:text-blue-700">
-                      {adCounts && adCounts[token.token] !== undefined ? adCounts[token.token] : 0}
+                      {adCounts && adCounts[token._id] !== undefined ? adCounts[token._id] : 0}
                     </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
