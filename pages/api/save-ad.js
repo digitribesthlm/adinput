@@ -6,7 +6,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  const { campaignId, platform, adType, adCopy, createdAt } = req.body;
+  const { campaignId, platform, adType, adCopy, createdAt, token } = req.body;
 
   if (!campaignId || !platform || !adType || !adCopy) {
     return res.status(400).json({ message: 'Missing required fields' });
@@ -33,7 +33,8 @@ export default async function handler(req, res) {
       platform,
       adType,
       adCopy: normalizedAdCopy,
-      createdAt: createdAt ? new Date(createdAt) : new Date()
+      createdAt: createdAt ? new Date(createdAt) : new Date(),
+      token
     });
 
     if (!result.acknowledged) {
