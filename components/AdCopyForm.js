@@ -226,7 +226,33 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
           );
         })
       ) : (
-        <div>No ad fields available for the selected platform and ad type.</div>
+        <div>
+          <p>Please select a platform and ad type:</p>
+          <select 
+            value={adPlatform}
+            onChange={(e) => setAdPlatform(e.target.value)}
+            className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Platform</option>
+            {Object.keys(adPlatforms).map((platform) => (
+              <option key={platform} value={platform}>
+                {adPlatforms[platform]}
+              </option>
+            ))}
+          </select>
+          <select
+            value={adType}
+            onChange={(e) => setAdType(e.target.value)}
+            className="mt-4 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Ad Type</option>
+            {Object.keys(adTypes[adPlatform] || {}).map((type) => (
+              <option key={type} value={type}>
+                {adTypes[adPlatform][type]}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
       <button
         onClick={handleSave}
