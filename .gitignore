@@ -1,5 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
@@ -36,9 +34,11 @@ yarn-error.log*
 next-env.d.ts
 
 # Ignore aider chat logs
-*aider_chat.*
+*.aider*
 .aider.chat.history.md
-
 
 # Ignore database files
 *.db
+
+# Ignore aider tags cache
+.aider.tags.cache.v3/
