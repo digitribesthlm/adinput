@@ -45,6 +45,7 @@ export default function TokenBasedAdInput() {
           campaignId={campaign._id}
           companyName={campaign.companyName}
           tokenBased={true}
+          token={token}
         />
       ) : (
         <div>No campaign data available</div>
