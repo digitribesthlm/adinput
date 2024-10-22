@@ -25,7 +25,7 @@ async function getAdCounts(db, tokens) {
   const adCounts = {};
 
   // Hardcode a test token for debugging
-  const testToken = 'your_test_token_here';
+  const testToken = '595d5b68-7314-4ce5-830f-ab6a2fecac84';
 
   for (const token of tokens) {
     console.log('Token ID:', token._id);
