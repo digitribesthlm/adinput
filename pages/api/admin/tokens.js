@@ -68,7 +68,7 @@ export default async function handler(req, res) {
   } finally {
     await client.close();
   }
-}import { MongoClient } from 'mongodb';
+}
 
 async function getAdCounts(db, tokens) {
   const adCounts = {};
