@@ -27,7 +27,7 @@ export default function TokenAds() {
   };
 
   if (isLoading) {
-    return <Layout><div>Loading...</div></Layout>;
+    return <Layout><div>Fetching ads...</div></Layout>;
   }
 
   return (

@@ -33,7 +33,7 @@ export default function TokenBasedAdInput() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>Validating token...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (

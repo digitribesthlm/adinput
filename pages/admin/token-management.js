@@ -60,8 +60,12 @@ export default function TokenManagement() {
     return `${daysLeft} day(s) left`;
   };
 
-  if (status === 'loading' || isLoading) {
+  if (status === 'loading') {
     return <Layout><div>Loading...</div></Layout>;
+  }
+
+  if (isLoading) {
+    return <Layout><div>Fetching tokens...</div></Layout>;
   }
 
   if (!session) {
