@@ -60,11 +60,21 @@ export default async function handler(req, res) {
       }
     ]).toArray();
 
-    res.status(200).json({ tokens });
+    const adCounts = await getAdCounts(db, tokens);
+    res.status(200).json({ tokens, adCounts });
   } catch (error) {
     console.error('Error fetching tokens:', error);
     res.status(500).json({ message: 'An error occurred while fetching tokens' });
   } finally {
     await client.close();
   }
+}import { MongoClient } from 'mongodb';
+
+async function getAdCounts(db, tokens) {
+  const adCounts = {};
+  for (const token of tokens) {
+    const count = await db.collection('ads').countDocuments({ token: token.token });
+    adCounts[token.token] = count;
+  }
+  return adCounts;
 }

@@ -12,6 +12,7 @@ export default function TokenManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [adCounts, setAdCounts] = useState({});
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -26,6 +27,10 @@ export default function TokenManagement() {
       const response = await fetch('/api/admin/tokens');
       const data = await response.json();
       setTokens(data.tokens);
+
+      const adCountsResponse = await fetch('/api/admin/ad-counts');
+      const adCountsData = await adCountsResponse.json();
+      setAdCounts(adCountsData.adCounts);
     } catch (error) {
       console.error('Error fetching tokens:', error);
     } finally {
@@ -97,6 +102,7 @@ export default function TokenManagement() {
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expires At</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time Left</th>
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ads Created</th>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -121,6 +127,13 @@ export default function TokenManagement() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {calculateTimeLeft(token.expiresAt)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <Link href={`/admin/token-ads/${token.token}`}>
+                      <a className="text-blue-500 hover:text-blue-700">
+                        {adCounts[token.token] || 0}
+                      </a>
+                    </Link>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
