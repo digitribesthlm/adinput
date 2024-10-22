@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = false }) => {
+const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = false, token }) => {
   const [adPlatforms, setAdPlatforms] = useState({});
   const [adTypes, setAdTypes] = useState({});
   const [adTypeFields, setAdTypeFields] = useState({});
@@ -121,7 +121,7 @@ const AdCopyForm = ({ initialPlatform, initialAdType, campaignId, tokenBased = f
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date() }),
+        body: JSON.stringify({ campaignId, platform: adPlatform, adType, adCopy, createdAt: new Date(), token }),
       });
       if (response.ok) {
         alert('Ad saved successfully!');
