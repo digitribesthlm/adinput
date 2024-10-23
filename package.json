@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "daisyui": "^4.12.13",
     "dotenv": "^16.4.5",
     "lucide-react": "^0.453.0",
