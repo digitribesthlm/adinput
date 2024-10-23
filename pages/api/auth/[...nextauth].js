@@ -4,6 +4,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoClient } from 'mongodb';
 import bcrypt from 'bcrypt';
+import clientPromise from '../../../lib/mongodb';
 
 export default NextAuth({
   providers: [
@@ -15,18 +16,18 @@ export default NextAuth({
       },
       async authorize(credentials) {
         try {
-          const client = await MongoClient.connect(process.env.MONGODB_URI);
+          const client = await clientPromise;
           const db = client.db(process.env.MONGODB_DB);
           const user = await db.collection('users').findOne({ email: credentials.email });
 
           if (user && (await bcrypt.compare(credentials.password, user.password))) {
             return { id: user._id, name: user.name, email: user.email, role: user.role };
           } else {
-            return null;
+            throw new Error('Invalid credentials');
           }
         } catch (error) {
           console.error('Error in authorize:', error);
-          return null;
+          throw new Error('Invalid credentials');
         }
       }
     })
