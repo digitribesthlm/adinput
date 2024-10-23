@@ -60,4 +60,3 @@ export default async function campaignsHandler(req, res) {
   });
 
   res.status(200).json({ token });
-}
