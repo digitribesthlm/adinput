@@ -36,6 +36,7 @@ next-env.d.ts
 # Ignore aider chat logs
 *.aider*
 .aider.chat.history.md
+.aider.tags.cache.v3/*
 
 # Ignore database files
 *.db
