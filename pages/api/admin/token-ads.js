@@ -1,3 +1,5 @@
+// pages/api/admin/token-ads.js
+
 import { MongoClient, ObjectId } from 'mongodb'; - 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
