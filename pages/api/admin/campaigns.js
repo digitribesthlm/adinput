@@ -1,9 +1,8 @@
-// pages/api/admin/campaigns.js -
 
 import { getSession } from 'next-auth/react';
 import clientPromise from '../../../lib/mongodb';
 
-export default async function handler(req, res) {
+export default async function campaignsHandler(req, res) {
   const session = await getSession({ req });
 
   if (!session || session.user.role !== 'admin') {
@@ -36,13 +35,6 @@ export default async function handler(req, res) {
   res.status(200).json(campaigns);
 }
 
-// pages/api/admin/generate-token.js
-
-import { getSession } from 'next-auth/react';
-import clientPromise from '../../../lib/mongodb';
-import { v4 as uuidv4 } from 'uuid';
-
-export default async function handler(req, res) {
   const session = await getSession({ req });
 
   if (!session || session.user.role !== 'admin') {

@@ -1,6 +1,6 @@
 // pages/api/admin/token-ads.js
 
-import { MongoClient, ObjectId } from 'mongodb'; - 
+import { MongoClient, ObjectId } from 'mongodb';
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
