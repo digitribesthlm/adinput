@@ -7,6 +7,7 @@ import bcrypt from 'bcrypt';
 import clientPromise from '../../../lib/mongodb';
 
 export default NextAuth({
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
