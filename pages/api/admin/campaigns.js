@@ -34,29 +34,3 @@ export default async function campaignsHandler(req, res) {
 
   res.status(200).json(campaigns);
 }
-
-  const session = await getSession({ req });
-
-  if (!session || session.user.role !== 'admin') {
-    return res.status(403).json({ error: 'Not authorized' });
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
-
-  const { campaignId } = req.body;
-  const token = uuidv4();
-
-  const client = await clientPromise;
-  const db = client.db('adinput');
-
-  await db.collection('tokens').insertOne({
-    token,
-    campaignId,
-    status: 'active',
-    createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days from now
-  });
-
-  res.status(200).json({ token });
