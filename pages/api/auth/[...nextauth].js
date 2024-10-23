@@ -3,6 +3,7 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { MongoClient } from 'mongodb';
+import bcrypt from 'bcrypt';
 
 export default NextAuth({
   providers: [
@@ -13,13 +14,18 @@ export default NextAuth({
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        const client = await MongoClient.connect(process.env.MONGODB_URI);
-        const db = client.db(process.env.MONGODB_DB);
-        const user = await db.collection('users').findOne({ email: credentials.email });
-        
-        if (user && credentials.password === user.password) { // In production, use proper password hashing
-          return { id: user._id, name: user.name, email: user.email, role: user.role };
-        } else {
+        try {
+          const client = await MongoClient.connect(process.env.MONGODB_URI);
+          const db = client.db(process.env.MONGODB_DB);
+          const user = await db.collection('users').findOne({ email: credentials.email });
+
+          if (user && (await bcrypt.compare(credentials.password, user.password))) {
+            return { id: user._id, name: user.name, email: user.email, role: user.role };
+          } else {
+            return null;
+          }
+        } catch (error) {
+          console.error('Error in authorize:', error);
           return null;
         }
       }
