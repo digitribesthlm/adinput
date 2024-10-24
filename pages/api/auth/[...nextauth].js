@@ -1,7 +1,6 @@
 // pages/api/auth/[...nextauth].js
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import bcrypt from 'bcrypt';
 import clientPromise from '../../../lib/mongodb';
 
 if (!process.env.NEXTAUTH_SECRET) {
@@ -30,15 +29,15 @@ const authOptions = {
           });
 
           if (!user) {
+            console.log('No user found with email:', credentials.email);
             throw new Error('No user found with this email');
           }
 
-          const isPasswordValid = await bcrypt.compare(
-            credentials.password,
-            user.password
-          );
+          // For plain text password comparison
+          const isPasswordValid = credentials.password === user.password;
 
           if (!isPasswordValid) {
+            console.log('Invalid password for user:', credentials.email);
             throw new Error('Invalid password');
           }
 

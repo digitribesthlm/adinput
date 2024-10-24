@@ -43,3 +43,9 @@ next-env.d.ts
 
 # Ignore aider tags cache
 .aider.tags.cache.v3/
+
+
+# Security sensitive scripts
+scripts/hashPasswords.js
+scripts/security/*.js
+**/password-migration/*
