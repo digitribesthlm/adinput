@@ -1,4 +1,3 @@
-// /pages/api/save-ad.js
 import { MongoClient, ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
@@ -16,21 +15,47 @@ export default async function handler(req, res) {
   const db = client.db(process.env.MONGODB_DB);
 
   try {
-    // Normalize adCopy data
+    // Normalize adCopy data while preserving arrays
     const normalizedAdCopy = {};
     for (const field in adCopy) {
       if (Array.isArray(adCopy[field])) {
-        normalizedAdCopy[field] = adCopy[field][0] || '';
+        // Filter out empty strings and preserve all non-empty values
+        normalizedAdCopy[field] = adCopy[field].filter(item => item && item.trim() !== '');
+        
+        // If the field shouldn't be an array in the final structure, join the values
+        if (['finalUrl', 'businessName', 'imageUrl', 'logoUrl', 'videoUrl', 'callToAction'].includes(field)) {
+          normalizedAdCopy[field] = normalizedAdCopy[field][0] || '';
+        }
       } else {
-        normalizedAdCopy[field] = adCopy[field];
+        // Handle non-array fields
+        normalizedAdCopy[field] = adCopy[field] || '';
       }
     }
+
+    // Restructure specific fields if needed
+    const finalAdCopy = {
+      finalUrl: normalizedAdCopy.finalUrl || '',
+      headline: Array.isArray(normalizedAdCopy.headline) 
+        ? normalizedAdCopy.headline 
+        : [normalizedAdCopy.headline].filter(Boolean),
+      longHeadline: Array.isArray(normalizedAdCopy.longHeadline)
+        ? normalizedAdCopy.longHeadline
+        : [normalizedAdCopy.longHeadline].filter(Boolean),
+      description: Array.isArray(normalizedAdCopy.description)
+        ? normalizedAdCopy.description
+        : [normalizedAdCopy.description].filter(Boolean),
+      callToAction: normalizedAdCopy.callToAction || '',
+      businessName: normalizedAdCopy.businessName || '',
+      imageUrl: normalizedAdCopy.imageUrl || '',
+      logoUrl: normalizedAdCopy.logoUrl || '',
+      videoUrl: normalizedAdCopy.videoUrl || ''
+    };
 
     const result = await db.collection('ads').insertOne({
       campaignId: new ObjectId(campaignId),
       platform,
       adType,
-      adCopy: normalizedAdCopy,
+      adCopy: finalAdCopy,
       createdAt: createdAt ? new Date(createdAt) : new Date(),
       token
     });
